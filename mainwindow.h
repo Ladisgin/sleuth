@@ -1,7 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "index_search.h"
+
 #include <QMainWindow>
+#include <QThread>
+#include <QTime>
+
+
+#include <memory>
+
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +24,11 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    std::unique_ptr<Ui::MainWindow> ui;
+    std::unique_ptr<QThread> thread;
+    QTime time;
+
+    void stop();
 };
 
 #endif // MAINWINDOW_H
