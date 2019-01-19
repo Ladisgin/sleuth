@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui\
+            concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,12 +28,14 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        index_search.cpp
+        index_search.cpp \
+    match_string.cpp
 
 HEADERS += \
         mainwindow.h \
         index_search.h \
-    tgram.h
+    tgram.h \
+    match_string.h
 
 FORMS += \
         mainwindow.ui

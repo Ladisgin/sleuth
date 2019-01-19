@@ -8,15 +8,18 @@
 #include <QSet>
 #include <QThread>
 #include <QFile>
-
+#include <QFileSystemWatcher>
+#include <memory>
+#include <limits>
+#include <set>
 #include "tgram.h"
 
-const size_t READ_BLOCK = 4096 * 4;
+const size_t READ_BLOCK = 4096 * 16;
 
 class index_search : public QObject {
     Q_OBJECT
 public:
-    index_search(QMutex &mtx, QMap<QString, QSet<tgram>> &paths_to_tgram);
+    index_search(QMutex &mtx, QMap<QString, std::set<tgram>> &paths_to_tgram, QString dir_path);
 
 signals:
     void index_finished();
@@ -25,14 +28,18 @@ signals:
     void finished();
 
 public slots:
-    void start_index(QString const dir_path);
-    void changed_index(QString const dir_path);
+    void start_index();
+    void start_index(QString const &path);
+    void changed_index();
+    void add_to_map(QString const &path);
+    void quit();
 
 private:
+    std::unique_ptr<QFileSystemWatcher> fsw;
     QMutex& mtx;
-    QMap<QString, QSet<tgram>> &paths_to_tgram;
+    QMap<QString, std::set<tgram>> &paths_to_tgram;
+    QString dir_path;
 
-    void add_to_map(QFile const &path);
 };
 
 #endif // INDEX_SEARCH_H
