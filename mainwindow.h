@@ -2,14 +2,14 @@
 #define MAINWINDOW_H
 
 #include "index_search.h"
+#include "tgram.h"
 
 #include <QMainWindow>
 #include <QThread>
 #include <QTime>
-
+#include <QMutex>
 
 #include <memory>
-
 
 namespace Ui {
 class MainWindow;
@@ -25,10 +25,19 @@ public:
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;
-    std::unique_ptr<QThread> thread;
+    std::unique_ptr<QThread> index_thread;
+    std::unique_ptr<QThread> search_thread;
     QTime time;
 
-    void stop();
+
+    QMutex mtx;
+    QMap<QString, QSet<tgram>> paths_to_tgram;
+
+    void start_index();
+    void start_search();
+
+    void stop_index();
+    void stop_search();
 };
 
 #endif // MAINWINDOW_H

@@ -31,7 +31,8 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-        index_search.h
+        index_search.h \
+    tgram.h
 
 FORMS += \
         mainwindow.ui
