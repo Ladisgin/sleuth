@@ -32,7 +32,6 @@ public slots:
     void start_index(QString path);
     void changed_index();
     void add_to_map(QString const &path);
-    void quit();
 
 private:
     std::unique_ptr<QFileSystemWatcher> fsw;

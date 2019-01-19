@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <set>
+#include <stdio.h>
 
 index_search::index_search(QMutex &mtx, QMap<QString, std::set<tgram>> &paths_to_tgram, QString const dir_path) : fsw(new QFileSystemWatcher), mtx(mtx), paths_to_tgram(paths_to_tgram), dir_path(dir_path){
     connect(fsw.get(), SIGNAL(directoryChanged(QString)), this, SLOT(start_index(QString)));
@@ -20,7 +21,7 @@ void index_search::start_index(){
     start_index(dir_path);
 }
 
-void index_search::start_index(QString cur_path){
+void index_search::start_index(QString cur_path) {
     QDirIterator it(cur_path, QDir::NoDotAndDotDot | QDir::Hidden | QDir::NoSymLinks | QDir::AllEntries, QDirIterator::Subdirectories);
     emit set_max_progress(0);
     emit set_progress(0);
@@ -50,6 +51,8 @@ void index_search::start_index(QString cur_path){
         emit set_progress(i);
         add_to_map(paths[i]);
     }
+    qDebug() << "index end";
+//    emit finished();
 }
 
 void index_search::changed_index() {
@@ -123,10 +126,4 @@ void index_search::add_to_map(QString const &path) {
     }
 
     fin.close();
-}
-
-void index_search::quit(){
-    emit set_max_progress(1);
-    emit set_progress(1);
-    emit finished();
 }

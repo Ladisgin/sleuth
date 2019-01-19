@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     qRegisterMetaType<std::pair<QString, QVector<QString>>>();
 
+
     connect(ui->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(open_file(QTreeWidgetItem*)));
 
     connect(ui->SelectDirectory, &QPushButton::clicked, this, &MainWindow::select_directory);
@@ -27,8 +28,9 @@ MainWindow::~MainWindow() {
 void MainWindow::select_directory() {
     cur_dir = QFileDialog::getExistingDirectory(this, "Select Directory for Scanning",
                                                     QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    ui->label->setText(cur_dir);
+
     start_index();
+    ui->label->setText(cur_dir);
 }
 
 void MainWindow::start_index() {
@@ -43,9 +45,9 @@ void MainWindow::start_index() {
     connect(worker, SIGNAL(set_progress(int)), ui->progressBar, SLOT(setValue(int)));
 
     connect(index_thread.get(), SIGNAL (started()), worker, SLOT (start_index()));
-    connect(worker, SIGNAL (finished()), index_thread.get(), SLOT (quit()));
-    connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
-    connect(worker, SIGNAL (finished()), this, SLOT (index_end()));
+//    connect(worker, SIGNAL (finished()), index_thread.get(), SLOT (quit()));
+//    connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
+//    connect(worker, SIGNAL (finished()), this, SLOT (index_end()));
 
     index_thread->start();
     qDebug() << "index thread start";
@@ -60,9 +62,10 @@ void MainWindow::start_search() {
 //        return;
 //    }
     qDebug() << paths_to_tgram.size();
+    stop_search();
+
     ui->treeWidget->clear();
     ui->lcdNumber->display(0);
-    stop_search();
 
     search_time.start();
     match_string* worker = new match_string(mtx, paths_to_tgram, ui->MatchString->text());
@@ -77,7 +80,6 @@ void MainWindow::start_search() {
     connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
     connect(worker, SIGNAL (finished()), this, SLOT (search_end()));
 
-
     search_thread->start();
     qDebug() << "search thread start";
 }
@@ -87,6 +89,7 @@ void MainWindow::stop_index() {
         index_thread->requestInterruption();
         index_thread->quit();
         index_thread->wait();
+        index_thread.reset(new QThread);
         qDebug() << "index canceled";
     }
 }

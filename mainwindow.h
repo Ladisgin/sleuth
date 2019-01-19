@@ -12,6 +12,7 @@
 #include <QMutex>
 #include <QTreeWidgetItem>
 #include <QVector>
+#include <QFileSystemWatcher>
 
 #include <memory>
 
@@ -26,6 +27,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+signals:
 
 public slots:
     void add_path(std::pair<QString, QVector<QString>>);
