@@ -10,15 +10,17 @@
 #include <set>
 
 index_search::index_search(QMutex &mtx, QMap<QString, std::set<tgram>> &paths_to_tgram, QString const dir_path) : fsw(new QFileSystemWatcher), mtx(mtx), paths_to_tgram(paths_to_tgram), dir_path(dir_path){
-    connect(fsw.get(), SIGNAL(directoryChanged(const QString &path)), this, SLOT(start_index(QString const &cur_path)));
-    connect(fsw.get(), SIGNAL(fileChanged(const QString &path)), this, SLOT(add_to_map(const QString &path)));
+    connect(fsw.get(), SIGNAL(directoryChanged(QString)), this, SLOT(start_index(QString)));
+    connect(fsw.get(), SIGNAL(fileChanged(QString)), this, SLOT(add_to_map(QString)));
 }
+
+index_search::~index_search(){}
 
 void index_search::start_index(){
     start_index(dir_path);
 }
 
-void index_search::start_index(QString const &cur_path){
+void index_search::start_index(QString cur_path){
     QDirIterator it(cur_path, QDir::NoDotAndDotDot | QDir::Hidden | QDir::NoSymLinks | QDir::AllEntries, QDirIterator::Subdirectories);
     emit set_max_progress(0);
     emit set_progress(0);

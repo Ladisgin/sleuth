@@ -20,7 +20,7 @@ class index_search : public QObject {
     Q_OBJECT
 public:
     index_search(QMutex &mtx, QMap<QString, std::set<tgram>> &paths_to_tgram, QString dir_path);
-
+    ~index_search();
 signals:
     void index_finished();
     void set_progress(int value);
@@ -29,7 +29,7 @@ signals:
 
 public slots:
     void start_index();
-    void start_index(QString const &path);
+    void start_index(QString path);
     void changed_index();
     void add_to_map(QString const &path);
     void quit();
