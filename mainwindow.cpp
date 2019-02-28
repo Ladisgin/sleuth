@@ -12,12 +12,16 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     qRegisterMetaType<std::pair<QString, QVector<QString>>>();
 
+    ui->treeWidget->setStyleSheet("background-color: rgb(31, 33, 37); alternate-background-color: rgb(42, 43, 47);");
+    ui->treeWidget->setAlternatingRowColors(true);
 
     connect(ui->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(open_file(QTreeWidgetItem*)));
 
     connect(ui->SelectDirectory, &QPushButton::clicked, this, &MainWindow::select_directory);
     connect(ui->IndexStop, &QPushButton::clicked, this, &MainWindow::stop_index);
     connect(ui->StartStopSearch, &QPushButton::clicked, this, &MainWindow::start_search);
+    ui->progressBar->setMaximum(1);
+    ui->progressBar->setValue(0);
 }
 
 MainWindow::~MainWindow() {
