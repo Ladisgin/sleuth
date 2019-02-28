@@ -30,7 +30,6 @@ signals:
 public slots:
     void start_index();
     void start_index(QString path);
-    void changed_index();
     void add_to_map(QString const &path);
 
 private:

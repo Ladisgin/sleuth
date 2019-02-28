@@ -58,9 +58,6 @@ void index_search::start_index(QString cur_path) {
 //    emit finished();
 }
 
-void index_search::changed_index() {
-    //do it later
-}
 
 void index_search::add_to_map(QString const &path) {
     static QMimeDatabase mimeDatabase;
