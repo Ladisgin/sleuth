@@ -5,6 +5,7 @@
 #include <QMimeDatabase>
 #include <QDebug>
 #include <QVector>
+#include <QMutexLocker>
 
 #include <fstream>
 #include <set>
@@ -120,9 +121,8 @@ void index_search::add_to_map(QString const &path) {
     }
 
     if(flag) {
-        mtx.lock();
+        QMutexLocker locker(&mtx);
         paths_to_tgram.insert(path, tgram_set);
-        mtx.unlock();
     }
 
     fin.close();

@@ -2,6 +2,7 @@
 #include <vector>
 #include <QFile>
 #include <QTextStream>
+#include <QMutexLocker>
 #include <QDebug>
 
 match_string::match_string(QMutex &mtx, QMap<QString, std::set<tgram>> const &paths_to_tgram, QString match_s) : mtx(mtx), paths_to_tgram(paths_to_tgram), match_s(match_s){}
@@ -15,7 +16,7 @@ void match_string::start_search() {
     for (int i = 2; i < buffer.size(); ++i) { //size int
         match_tgram.insert(tgram(buffer[i - 2], buffer[i - 1], buffer[i])); //operator[] from int and uint :(
     }
-    mtx.lock();
+    QMutexLocker locker(&mtx);
     int k = 0;
     for(auto it = paths_to_tgram.keyValueBegin(); it != paths_to_tgram.keyValueEnd() && !QThread::currentThread()->isInterruptionRequested(); ++it) {
         if(std::includes((*it).second.begin(), (*it).second.end(),
@@ -41,7 +42,6 @@ void match_string::start_search() {
         }
         emit set_progress(++k);
     }
-    mtx.unlock();
     emit set_max_progress(1);
     emit set_progress(1);
     emit finished();
