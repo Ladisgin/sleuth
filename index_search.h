@@ -26,6 +26,7 @@ signals:
     void set_progress(int value);
     void set_max_progress(int value);
     void finished();
+    void index_end();
 
 public slots:
     void start_index();

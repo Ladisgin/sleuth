@@ -7,7 +7,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow), index_thread(new QThread()), search_thread(new QThread) {
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), index_now(false), ui(new Ui::MainWindow), index_thread(new QThread()), search_thread(new QThread) {
     ui->setupUi(this);
 
     qRegisterMetaType<std::pair<QString, QVector<QString>>>();
@@ -39,6 +39,7 @@ void MainWindow::select_directory() {
 
 void MainWindow::start_index() {
     stop_index();
+    index_now = true;
 
     index_time.start();
     paths_to_tgram.clear();
@@ -51,20 +52,21 @@ void MainWindow::start_index() {
     connect(index_thread.get(), SIGNAL (started()), worker, SLOT (start_index()));
 //    connect(worker, SIGNAL (finished()), index_thread.get(), SLOT (quit()));
 //    connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
-//    connect(worker, SIGNAL (finished()), this, SLOT (index_end()));
+    connect(worker, SIGNAL (finished()), this, SLOT (index_end()));
+    connect(worker, SIGNAL (index_end()), this, SLOT (index_end()));
 
     index_thread->start();
     qDebug() << "index thread start";
 }
 
 void MainWindow::start_search() {
-//    if(index_thread->isRunning()) {
-//        ui->treeWidget->clear();
-//        QTreeWidgetItem *ti = new QTreeWidgetItem();
-//        ti->setText(0, "Directory now indexing");
-//        ui->treeWidget->addTopLevelItem(ti);
-//        return;
-//    }
+    if(index_now) {
+        ui->treeWidget->clear();
+        QTreeWidgetItem *ti = new QTreeWidgetItem();
+        ti->setText(0, "Directory now indexing");
+        ui->treeWidget->addTopLevelItem(ti);
+        return;
+    }
     qDebug() << paths_to_tgram.size();
     stop_search();
 
@@ -121,6 +123,7 @@ void MainWindow::add_path(std::pair<QString, QVector<QString>> v){
 }
 
 void MainWindow::index_end() {
+    index_now = false;
     qDebug() << "index end time: " << QTime::fromMSecsSinceStartOfDay(index_time.restart()).toString("HH:mm:ss:zzz");
 }
 

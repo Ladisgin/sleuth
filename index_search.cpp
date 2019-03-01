@@ -56,6 +56,7 @@ void index_search::start_index(QString cur_path) {
     emit set_max_progress(1);
     emit set_progress(1);
     qDebug() << "index end";
+    emit index_end();
 //    emit finished();
 }
 

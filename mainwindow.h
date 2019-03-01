@@ -40,6 +40,8 @@ public slots:
 private:
     QString cur_dir;
 
+    bool index_now;
+
     std::unique_ptr<Ui::MainWindow> ui;
     std::unique_ptr<QThread> index_thread;
     std::unique_ptr<QThread> search_thread;
