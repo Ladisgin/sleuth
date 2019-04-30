@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QMutex>
 #include <QVector>
 #include <QMap>
 #include <QSet>

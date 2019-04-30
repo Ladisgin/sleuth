@@ -5,7 +5,7 @@
 #include <QMutexLocker>
 #include <QDebug>
 
-match_string::match_string(QMutex &mtx, QMap<QString, std::set<tgram>> const &paths_to_tgram, QString match_s) : mtx(mtx), paths_to_tgram(paths_to_tgram), match_s(match_s){}
+match_string::match_string(QMutex &mtx, QMap<QString, std::set<tgram>> const &paths_to_tgram, QString match_s) : mtx(mtx),  match_s(match_s), paths_to_tgram(paths_to_tgram){}
 
 void match_string::start_search() {
     qDebug() << "search search";

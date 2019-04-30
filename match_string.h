@@ -6,6 +6,7 @@
 #include <QSet>
 #include <QByteArray>
 #include <QThread>
+#include <QMutex>
 #include <set>
 #include "tgram.h"
 
@@ -25,8 +26,8 @@ public slots:
     void start_search();
 
 private:
-    QString match_s;
     QMutex& mtx;
+    QString match_s;
     QMap<QString, std::set<tgram>> const &paths_to_tgram;
 };
 
